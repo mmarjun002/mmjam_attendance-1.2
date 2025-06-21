@@ -5,7 +5,7 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 33
     defaultConfig {
-        applicationId "com.example.attendance_app"
+        applicationId "com.mmjam.attendance_app"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
