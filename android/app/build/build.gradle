@@ -1,12 +1,11 @@
 
-<<<<<<< HEAD
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 33
     defaultConfig {
-        applicationId "com.example.attendance_app"
+        applicationId "com.mmjam.attendance_app"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
@@ -23,22 +22,4 @@ android {
 dependencies {
     implementation 'com.google.firebase:firebase-auth:21.1.0'
     implementation 'com.google.firebase:firebase-firestore:24.4.0'
-=======
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
-        classpath 'com.google.gms:google-services:4.3.15'
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
->>>>>>> 6eb2bdacddf1c3f4df0b44e30de4ad1c397db0a4
 }

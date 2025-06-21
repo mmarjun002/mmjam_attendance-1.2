@@ -22,3 +22,22 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+<<<<<<< HEAD
+=======
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.0
+
+flutter_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon.png" # ← Ito ang app icon mo
+  min_sdk_android: 21
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/splash.png # ← Ito ang splash screen image mo
+  android: true
+  ios: false
+>>>>>>> 6eb2bdacddf1c3f4df0b44e30de4ad1c397db0a4
