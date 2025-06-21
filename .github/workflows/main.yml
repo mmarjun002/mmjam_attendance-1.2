@@ -2,9 +2,11 @@ name: Build Flutter APK
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build-android:
@@ -17,16 +19,20 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.19.6' # or your desired version
 
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          cd mmarjun002
+          flutter pub get
 
       - name: Build release APK
-        run: flutter build apk --release --target-platform android-arm64
+        run: |
+          cd mmarjun002
+          flutter build apk --release
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: app-release.apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: release-apk
+          path: mmarjun002/build/app/outputs/flutter-apk/app-release.apk
