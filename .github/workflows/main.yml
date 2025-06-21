@@ -22,14 +22,10 @@ jobs:
           flutter-version: '3.19.6' # or your desired version
 
       - name: Install dependencies
-        run: |
-          cd mmarjun002
-          flutter pub get
+        run:   flutter pub get
 
       - name: Build release APK
-        run: |
-          cd mmarjun002
-          flutter build apk --release
+        run: flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
