@@ -20,14 +20,14 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
-        working-directory: mmjam-attendance
+        working-directory: mmjam_attendance-1.2
 
       - name: Build release APK
         run: flutter build apk --release --target-platform android-arm64
-        working-directory: mmjam-attendance
+        working-directory: mmjam_attendance-1.2
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
-          path: mmjam-attendance/build/app/outputs/flutter-apk/app-release.apk
+          path: mmjam_attendance-1.2/build/app/outputs/flutter-apk/app-release.apk
