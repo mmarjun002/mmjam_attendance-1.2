@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,9 +15,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Attendance App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      title: 'Attendance Logger',
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(fontSize: 18),
+          titleLarge: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            textStyle: TextStyle(fontSize: 18),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+      ),
       home: LoginScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -79,51 +92,4 @@ class LoginScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Personnel Login')),
-      body: Center(
-        child: ElevatedButton(
-          child: Text('Login with Fingerprint'),
-          onPressed: () => handleLogin(context),
-        ),
-      ),
-    );
-  }
-}
-
-class DashboardScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Dashboard')),
-      body: Center(child: Text('You are logged in. Attendance recorded.')),
-    );
-  }
-}
-
-class AdminPanel extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Admin Panel')),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('attendance').orderBy('timestamp', descending: true).snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return CircularProgressIndicator();
-          final docs = snapshot.data!.docs;
-          return ListView.builder(
-            itemCount: docs.length,
-            itemBuilder: (context, index) {
-              final data = docs[index].data();
-              return ListTile(
-                title: Text("User: ${data['userId']}"),
-                subtitle: Text("${data['date']} at ${data['time']}"),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
+  Widget build
