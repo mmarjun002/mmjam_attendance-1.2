@@ -16,22 +16,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Attendance Logger',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+        primarySwatch: Colors.teal,
+        scaffoldBackgroundColor: Colors.white,
         textTheme: TextTheme(
           bodyLarge: TextStyle(fontSize: 18),
-          titleLarge: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            textStyle: TextStyle(fontSize: 18),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
+          bodyMedium: TextStyle(fontSize: 16),
         ),
       ),
       home: LoginScreen(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -45,7 +39,7 @@ class LoginScreen extends StatelessWidget {
 
     try {
       return await auth.authenticate(
-        localizedReason: 'Scan your fingerprint to log in',
+        localizedReason: 'Scan fingerprint to log in',
         options: const AuthenticationOptions(biometricOnly: true),
       );
     } catch (e) {
@@ -72,17 +66,23 @@ class LoginScreen extends StatelessWidget {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         logAttendance(user.uid);
-        final snapshot = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        final snapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
         final role = snapshot.data()?['role'] ?? 'personnel';
         if (role == 'admin') {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => AdminPanel()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => AdminPanel()));
         } else {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => DashboardScreen()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => DashboardScreen()));
         }
       } else {
         final userCredential = await FirebaseAuth.instance.signInAnonymously();
         logAttendance(userCredential.user!.uid);
-        Navigator.push(context, MaterialPageRoute(builder: (_) => DashboardScreen()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => DashboardScreen()));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -92,4 +92,73 @@ class LoginScreen extends StatelessWidget {
   }
 
   @override
-  Widget build
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Attendance Logger')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(double.infinity, 50),
+              backgroundColor: Colors.teal,
+            ),
+            icon: Icon(Icons.fingerprint),
+            label: Text(
+              'Login with Fingerprint',
+              style: TextStyle(fontSize: 18),
+            ),
+            onPressed: () => handleLogin(context),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DashboardScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Dashboard')),
+      body: Center(
+        child: Text(
+          'You are logged in. Attendance recorded.',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
+    );
+  }
+}
+
+class AdminPanel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Admin Panel')),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('attendance')
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+          final docs = snapshot.data!.docs;
+          return ListView.separated(
+            padding: EdgeInsets.all(10),
+            separatorBuilder: (_, __) => Divider(),
+            itemCount: docs.length,
+            itemBuilder: (context, index) {
+              final data = docs[index].data();
+              return ListTile(
+                leading: Icon(Icons.access_time),
+                title: Text("User: ${data['userId']}"),
+                subtitle: Text("${data['date']} at ${data['time']}"),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
